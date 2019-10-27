@@ -30,14 +30,14 @@ namespace Testsa
 
         static void Main(string[] args)
         {
-            CoreLib core = new CoreLib();
+           CoreLib core = new CoreLib();
 
             Console.Write("당신의 아이디를 입력 해주세요! : ");
-            var id = Console.ReadLine();
+  //          var id = Console.ReadLine();
             Console.Write("당신의 비밀번호를 입력 해주세요! : ");
-            var pw = Console.ReadLine();
+    //        var pw = Console.ReadLine();
 
-            if (core.Login(id, pw))
+            if (core.Login("20183221", "20183221"))
             {
                 Console.WriteLine("로그인 성공!");
             }
@@ -52,7 +52,7 @@ namespace Testsa
             // 파일화 작업
 
             Console.WriteLine("유저 정보 읽는중...");
-            var user = core.GetUserInfo(id);
+            var user = core.GetUserInfo("20183221");
             Console.WriteLine("유저 정보 읽음!");
 
             Console.WriteLine($"ID : {user.Id}");
@@ -63,28 +63,30 @@ namespace Testsa
 
             Console.WriteLine();
 
-            foreach (var value in user.SolveList)
-            {
-                Task t = new Task(() =>
-                {
-                    Console.WriteLine($"{value.Id} 번 문제 상태창 검색중...");
-                    var status = core.SearchStatus(id, value.Id, Lang.All, Result.Accept);
-                    Console.WriteLine($"{value.Id} 번 문제 상태창 검색 완료");
-                    for (int i = 0; i < status.Count; i++)
-                    {
-                        Console.WriteLine($"{value.Id} 번 문제 코드 읽는 중...");
-                        var code = core.GetCode(status[i].CodeLink);
-                        Console.WriteLine($"{value.Id} 번 문제 코드 읽음");
+            core.Submit("main(a,b){scanf(\"%d%d\",&a,&b);printf(\"%d\",a+b);}", 1000, Lang.Cpp);
 
-                        using (StreamWriter sw = new StreamWriter($"{path}\\{value.Id}_{Remove(value.Name)}_{status[i].Language}_{i + 1}.txt", false, Encoding.UTF8))
-                        {
-                            sw.Write(code);
-                        }
-                        Console.WriteLine($"{value.Id}_{Remove(value.Name)}_{status[i].Language}_{i + 1} 작성 저장 완료");
-                    }
-                });
-                t.Start();
-            }
+            //foreach (var value in user.SolveList)
+            //{
+            //    Task t = new Task(() =>
+            //    {
+            //        Console.WriteLine($"{value.Id} 번 문제 상태창 검색중...");
+            //        var status = core.SearchStatus(id, value.Id, Lang.All, Result.Accept);
+            //        Console.WriteLine($"{value.Id} 번 문제 상태창 검색 완료");
+            //        for (int i = 0; i < status.Count; i++)
+            //        {
+            //            Console.WriteLine($"{value.Id} 번 문제 코드 읽는 중...");
+            //            var code = core.GetCode(status[i].CodeLink);
+            //            Console.WriteLine($"{value.Id} 번 문제 코드 읽음");
+
+            //            using (StreamWriter sw = new StreamWriter($"{path}\\{value.Id}_{Remove(value.Name)}_{status[i].Language}_{i + 1}.txt", false, Encoding.UTF8))
+            //            {
+            //                sw.Write(code);
+            //            }
+            //            Console.WriteLine($"{value.Id}_{Remove(value.Name)}_{status[i].Language}_{i + 1} 작성 저장 완료");
+            //        }
+            //    });
+            //    t.Start();
+            //}
 
             for (; ; );
         }

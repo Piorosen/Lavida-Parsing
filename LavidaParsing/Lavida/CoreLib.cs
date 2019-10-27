@@ -108,6 +108,37 @@ namespace Testsa
             return stream.ReadToEnd();
         }
 
+        string PostPage(string page, string value)
+        {
+            HttpWebRequest hwr = (HttpWebRequest)WebRequest.CreateHttp(page);
+
+            hwr.Method = "POST";
+            hwr.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36";
+            hwr.ContentType = "text/html; charset=utf-8";
+            hwr.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3";
+            hwr.CookieContainer = new CookieContainer();
+            hwr.CookieContainer = Session;
+            hwr.Referer = "https://lavida.us/submitpage.php?id=1002";
+
+            using (var stream = hwr.GetRequestStream())
+            {
+                using (var sw = new StreamWriter(stream))
+                {
+                    sw.Write(value);
+                }
+            }
+
+            using (var read = hwr.GetResponse().GetResponseStream())
+            {
+                using (var sr = new StreamReader(read))
+                {
+                    var p = sr.ReadToEnd();
+                    return p;
+                }
+            }
+
+            return null;
+        }
         
         public List<StatusList> SearchStatus(string id, int problemId, Lang l = Lang.All, Result r = Result.All)
         {
@@ -157,5 +188,20 @@ namespace Testsa
             return HttpUtility.HtmlDecode(p.InnerText);
         }
 
+
+        public bool Submit(string value, int problemId, Lang l = Lang.C)
+        {
+            PostPage("https://lavida.us/submit.php", $"id=1002&language=0&source=main%28a%2Cb%29%7Bscanf%28%22%25d%25d%22%2C%26a%2C%26b%29%3Bprintf%28%22%25d%22%2Ca%2Bb%29%3B%7D");
+
+            // https://lavida.us/submit.php
+            // 302 POST
+
+            // id=1000&language=1&source=main%28a%2Cb%29%7Bscanf%28%22%25d%25d%22%2C%26a%2C%26b%29%3Bprintf%28%22%25d%22%2Ca%2Bb%29%3B%7D
+
+
+
+
+            return true;
+        }
     }
 }
